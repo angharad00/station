@@ -9,6 +9,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(here)
 library(tidyverse)
 library(gganimate)
+library(gifski)
 
 ```
 
@@ -36,7 +37,38 @@ df <- read.table(here("data", "modified.txt"),skip = 7, fill = TRUE)
 
 ```{r}
 cols <- c("year", "month", "max_t", "min_t", "af", "rain", "sun")
+colnames(df) <-cols
 
+#df <- df %>% 
+ # mutate(sun = parse_number(sun)) %>% #remove non-numeric character
+#  mutate(year = as.numeric(year),
+ #        max_t = as.numeric(max_t),
+  #       min_t = as.numeric(min_t),
+   #      days = as.numeric(days),
+    #     rain = as.numeric(rain)) 
 
+df <- df %>% 
+  mutate( max_t = as.numeric(max_t)
+         )
+```
+visualise data 
+
+### static plot
+```{r}
+p <- ggplot(df,mapping = aes(x=month, y=max_t, group=year, col =year))
+p + geom_line(alpha=0.1)
+```
+### animated plot 
+```{r animation}
+cf <- df %>% group_by(year) %>% summarise(av_upper = mean(max_t))
+
+p3 <- ggplot(cf,mapping = aes(x = year, y = av_upper), frame = year)
+
+anim <- p3 +
+  geom_point() +
+  transition_manual(year, cumulative = TRUE) +
+  ggtitle("The year is: {frame +1882}")
+anim
+anim_save(here("data", "mygif.gif"), anim, renderer = gifski_renderer())
 ```
 
