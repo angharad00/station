@@ -357,6 +357,23 @@ display: none;
 
 <div id="weather-station-project" class="section level2">
 <h2>Weather station project</h2>
+<pre class="r"><code>source = here(&quot;data&quot;,&quot;sheffielddata.txt&quot;)
+
+#df &lt;- read.csv(source,sep=&#39;\t&#39;,skip = 7)
+
+df &lt;- readLines(source)</code></pre>
+<pre><code>## Warning in readLines(source): incomplete final line found on
+## &#39;/Users/angharadcollins/Documents/data_vis/lessons/station/data/sheffielddata.txt&#39;</code></pre>
+<pre class="r"><code>df &lt;- (gsub(&quot;Provisional&quot;,&quot;&quot;,df))
+
+df &lt;- (gsub(&quot;\\*&quot;,&quot;&quot;,df))
+
+df &lt;- (gsub(&quot;\\#&quot;,&quot;&quot;,df))
+
+writeLines(df, here(&quot;data&quot;,&quot;modified.txt&quot;))
+
+df &lt;- read.table(here(&quot;data&quot;, &quot;modified.txt&quot;),skip = 7, fill = TRUE)</code></pre>
+<pre class="r"><code>cols &lt;- c(&quot;year&quot;, &quot;month&quot;, &quot;max_t&quot;, &quot;min_t&quot;, &quot;af&quot;, &quot;rain&quot;, &quot;sun&quot;)</code></pre>
 </div>
 
 
